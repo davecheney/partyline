@@ -46,6 +46,10 @@ Having another layer 2 interface on your machine is interesting, sort of, you ca
 
 A more interesting use case would be to configure a bridge interface and bridge your partyline tap device onto your local ethernet segment.
 
+Partyline also appears to be quite good at NAT traversal. Two partyline clients can establish a layer 2 bridge via a remote partylined server.
+
+Multiple partylined servers can be bridged by using a bridge interface composed of a tap device for each partyline.
+
 
 
 
