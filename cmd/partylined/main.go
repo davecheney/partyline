@@ -11,7 +11,7 @@ import (
 var (
 	endpoint string
 
-	tunnels = make(map[int]map[string]*net.UDPAddr)
+	tunnel = make(map[partyline.MAC]*net.UDPAddr)
 )
 
 func init() {
@@ -31,21 +31,17 @@ func handle(ch chan struct {
 	src *net.UDPAddr
 }, conn *net.UDPConn) {
 	for frame := range ch {
-		vin, _ := partyline.Deencapsulate(frame.buf)
-
-		tunnel := tunnels[vin]
-		if tunnel == nil {
-			tunnel = make(map[string]*net.UDPAddr)
-			tunnels[vin] = tunnel
-		}
-		tunnel[frame.src.String()] = frame.src
-		log.Printf("vin: %0x, src: %v", vin, frame.src)
+		_, buf := partyline.Deencapsulate(frame.buf)
+		f := partyline.Frame(buf)
+		src := partyline.SourceMAC(f)
+		tunnel[src] = frame.src
+		log.Printf("%v: %v", frame.src, f)
 		for k, a := range tunnel {
-			if k == frame.src.String() {
+			if k == src {
 				// skip
 				continue
 			}
-			log.Printf("relay: %v -> %v", frame.src, a)
+			log.Printf("relay: %v -> %v", f, a)
 			_, err := conn.WriteToUDP(frame.buf, a)
 			check(err)
 		}

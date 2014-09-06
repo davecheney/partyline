@@ -73,6 +73,7 @@ func main() {
 		buf, err := taptun.ReadFrame(tap, buf)
 		check(err)
 		log.Printf("tap.Read: %s", partyline.Frame(buf))
+
 		out <- buf
 	}
 }

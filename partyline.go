@@ -33,14 +33,14 @@ func (m MAC) String() string {
 // SourceMAC returns the source MAC address of the frame.
 func SourceMAC(b []byte) MAC {
 	var m MAC
-	copy(m[:], b[0:6])
+	copy(m[:], b[6:12])
 	return m
 }
 
 // DestMAC returns the destination MAC address of the frame.
 func DestMAC(b []byte) MAC {
 	var m MAC
-	copy(m[:], b[6:12])
+	copy(m[:], b[:6])
 	return m
 }
 
