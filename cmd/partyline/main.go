@@ -44,7 +44,7 @@ func receive(conn *net.UDPConn, tap io.Writer) {
 		check(err)
 		buf := b[:n]
 		_, buf = partyline.Deencapsulate(buf)
-		log.Printf("tap.Write: % x", buf)
+		log.Printf("tap.Write: %v", partyline.Frame(buf))
 		_, err = tap.Write(buf)
 	}
 }
