@@ -70,10 +70,9 @@ func main() {
 
 	for {
 		buf := make([]byte, 1500)
-		n, err := tap.Read(buf)
+		buf, err := taptun.ReadFrame(tap, buf)
 		check(err)
-		buf = buf[:n]
-		log.Printf("tap.Read: % x", buf)
-		out <- buf[:n]
+		log.Printf("tap.Read: %s", partyline.Frame(buf))
+		out <- buf
 	}
 }
