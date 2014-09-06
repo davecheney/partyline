@@ -9,7 +9,7 @@ Partyline is an experimental layer 2 ethernet bridge.
 Description
 -----------
 
-Partyline creates a 90's style ethernet hub over UDP using VXLAN encapsulation.
+Partyline creates a 90's style ethernet hub over UDP.
 
 Installation
 ------------

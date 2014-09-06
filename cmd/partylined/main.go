@@ -31,8 +31,7 @@ func handle(ch chan struct {
 	src *net.UDPAddr
 }, conn *net.UDPConn) {
 	for frame := range ch {
-		_, buf := partyline.Deencapsulate(frame.buf)
-		f := partyline.Frame(buf)
+		f := partyline.Frame(frame.buf)
 		src := partyline.SourceMAC(f)
 		tunnel[src] = frame.src
 		log.Printf("%v: %v", frame.src, f)

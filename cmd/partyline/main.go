@@ -12,12 +12,10 @@ import (
 
 var (
 	endpoint string
-	vin      int
 )
 
 func init() {
 	flag.StringVar(&endpoint, "e", "partyline.dfc.io:9000", "partyline endpoint")
-	flag.IntVar(&vin, "v", 1<<12, "vxlan identifier")
 
 	flag.Parse()
 }
@@ -31,7 +29,6 @@ func check(err error) {
 func send(out <-chan []byte, conn *net.UDPConn) {
 	defer conn.Close()
 	for buf := range out {
-		buf = partyline.Encapsulate(buf, vin)
 		_, err := conn.Write(buf)
 		check(err)
 	}
@@ -43,7 +40,6 @@ func receive(conn *net.UDPConn, tap io.Writer) {
 		n, err := conn.Read(b[:])
 		check(err)
 		buf := b[:n]
-		_, buf = partyline.Deencapsulate(buf)
 		log.Printf("tap.Write: %v", partyline.Frame(buf))
 		_, err = tap.Write(buf)
 	}
@@ -69,7 +65,7 @@ func main() {
 	go receive(conn, tap)
 
 	for {
-		buf := make([]byte, 1500)
+		buf := make([]byte, 1560)
 		buf, err := taptun.ReadFrame(tap, buf)
 		check(err)
 		log.Printf("tap.Read: %s", partyline.Frame(buf))
